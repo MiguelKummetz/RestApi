@@ -84,14 +84,26 @@ describe('testing POST', () => {
 describe('testing DELETE', () => {
   test('a note can be deleted', async () => {
     const { ids } = await getAllContentFromNotes()
+    const noteToDelete = ids[0]
 
     await api
-      .delete('/api/notes/' + ids[0])
+      .delete(`/api/notes/${noteToDelete}`)
       .expect(204)
+
+    const { response, contents } = await getAllContentFromNotes()
+
+    expect(response.body).toHaveLength(initialNotes.length - 1)
+    expect(contents).not.toContain(noteToDelete.content)
+  })
+
+  test('a non existing note can not be deleted', async () => {
+    await api
+      .delete('/api/notes/1234')
+      .expect(400)
 
     const { response } = await getAllContentFromNotes()
 
-    expect(response.body).toHaveLength(initialNotes.length - 1)
+    expect(response.body).toHaveLength(initialNotes.length)
   })
 })
 describe('testing PUT', () => {

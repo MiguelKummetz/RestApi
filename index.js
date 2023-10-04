@@ -51,7 +51,17 @@ app.get('/api/notes/:id', (request, response, next) => {
 //     }).catch(next)
 // })
 
+// Delete version without async/await:
 app.delete('/api/notes/:id', (request, response, next) => {
+  const { id } = request.params
+
+  Note.findByIdAndDelete(id)
+    .then(() => { response.status(204).end() })
+    .catch(error => { next(error) })
+})
+
+// Delete version with async/await:
+app.delete('/api/notes/:id', async (request, response, next) => {
   const { id } = request.params
 
   Note.findByIdAndDelete(id)
@@ -72,28 +82,8 @@ app.put('/api/notes/:id', (request, response, next) => {
     .then(result => { response.json(result) })
 })
 
-app.post('/api/notes', (request, response) => {
-  const note = request.body
-
-  if (!note || !note.content) {
-    return response.status(400).json({
-      error: 'required "content" field is missing'
-    })
-  }
-
-  const newNote = new Note({
-    content: note.content,
-    important: typeof note.important !== 'undefined' ? note.important : false,
-    date: new Date()// .toISOString()
-  })
-
-  newNote.save().then(savedNote => {
-    response.json(savedNote)
-  })
-})
-
-// POST version with async/await:
-// app.post('/api/notes', async (request, response) => {
+// POST version without async/await:
+// app.post('/api/notes', (request, response, next) => {
 //   const note = request.body
 //   if (!note || !note.content) {
 //     return response.status(400).json({
@@ -107,13 +97,33 @@ app.post('/api/notes', (request, response) => {
 //     date: new Date()// .toISOString()
 //   })
 
-//   try {
-//     const savedNote = await newNote.save()
+//   newNote.save().then(savedNote => {
 //     response.json(savedNote)
-//   } catch (e) {
-//     response.status(500).end()
-//   }
+//   }).catch(err => next(err))
+// })
 
+// POST version with async/await:
+app.post('/api/notes', async (request, response, next) => {
+  const note = request.body
+  if (!note || !note.content) {
+    return response.status(400).json({
+      error: 'required "content" field is missing'
+    })
+  }
+
+  const newNote = new Note({
+    content: note.content,
+    important: typeof note.important !== 'undefined' ? note.important : false,
+    date: new Date()// .toISOString()
+  })
+
+  try {
+    const savedNote = await newNote.save()
+    response.json(savedNote)
+  } catch (e) {
+    next(e)
+  }
+})
 // middleware for errror handeling of non existing URLs
 app.use(notFound)
 
