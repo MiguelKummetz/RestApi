@@ -52,24 +52,27 @@ app.get('/api/notes/:id', (request, response, next) => {
 // })
 
 // Delete version without async/await:
-app.delete('/api/notes/:id', (request, response, next) => {
-  const { id } = request.params
+// app.delete('/api/notes/:id', (request, response, next) => {
+//   const { id } = request.params
 
-  Note.findByIdAndDelete(id)
-    .then(() => { response.status(204).end() })
-    .catch(error => { next(error) })
-})
+//   Note.findByIdAndDelete(id)
+//     .then(() => { response.status(204).end() })
+//     .catch(error => { next(error) })
+// })
 
 // Delete version with async/await:
 app.delete('/api/notes/:id', async (request, response, next) => {
   const { id } = request.params
 
-  Note.findByIdAndDelete(id)
-    .then(() => { response.status(204).end() })
-    .catch(error => { next(error) })
+  try {
+    await Note.findByIdAndDelete(id)
+    response.status(204).end()
+  } catch (e) {
+    next(e)
+  }
 })
 
-app.put('/api/notes/:id', (request, response, next) => {
+app.put('/api/notes/:id', async (request, response, next) => {
   const { id } = request.params
   const note = request.body
 
@@ -78,8 +81,15 @@ app.put('/api/notes/:id', (request, response, next) => {
     important: note.important
   }
 
-  Note.findByIdAndUpdate(id, newNoteInfo, { new: true })
-    .then(result => { response.json(result) })
+  // Note.findByIdAndUpdate(id, newNoteInfo, { new: true })
+  //   .then(result => { response.json(result) })
+
+  try {
+    const updatedNote = await Note.findByIdAndUpdate(id, newNoteInfo, { new: true })
+    response.json(updatedNote)
+  } catch (e) {
+    next(e)
+  }
 })
 
 // POST version without async/await:
@@ -97,9 +107,9 @@ app.put('/api/notes/:id', (request, response, next) => {
 //     date: new Date()// .toISOString()
 //   })
 
-//   newNote.save().then(savedNote => {
-//     response.json(savedNote)
-//   }).catch(err => next(err))
+//   newNote.save()
+//   .then(savedNote => { response.json(savedNote)})
+//   .catch(err => next(err))
 // })
 
 // POST version with async/await:
