@@ -1,0 +1,75 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Api Rest",
+    "dateExported": "2023-10-05T05:25:46.813Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "676fee47-eacb-4271-baaf-c92394fa8868",
+            "colId": "13bd0c0b-8976-4d53-954f-91dda3809756",
+            "containerId": "",
+            "name": "api/notes",
+            "url": "http://localhost:3001/api/notes",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-10-04T17:01:24.331Z",
+            "modified": "2023-10-04T17:01:39.613Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "0fed7f41-4a0e-4469-aa08-a4651f73bce5",
+            "colId": "13bd0c0b-8976-4d53-954f-91dda3809756",
+            "containerId": "",
+            "name": "api/notes/:id",
+            "url": "http://localhost:3001/api/notes/651d99b1ac54cc0d54f32cb3",
+            "method": "DELETE",
+            "sortNum": 20000,
+            "created": "2023-10-04T17:02:14.266Z",
+            "modified": "2023-10-04T17:06:42.271Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "f2b40782-887d-46e6-94d0-ac7ce4f67881",
+            "colId": "13bd0c0b-8976-4d53-954f-91dda3809756",
+            "containerId": "",
+            "name": "api/notes",
+            "url": "http://localhost:3001/api/notes",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2023-10-04T17:03:07.642Z",
+            "modified": "2023-10-04T17:22:04.085Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"content\": \"super mi amor\",\n    \"important\": true\n  }",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "b6cb854c-9a38-457f-b1b5-36962d34665d",
+            "colId": "13bd0c0b-8976-4d53-954f-91dda3809756",
+            "containerId": "",
+            "name": "api/notes/:id",
+            "url": "http://localhost:3001/api/notes/651d99b1ac54cc0d54f32cb7",
+            "method": "PUT",
+            "sortNum": 40000,
+            "created": "2023-10-04T17:04:18.538Z",
+            "modified": "2023-10-04T17:05:37.823Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"content\": \"this content is updated using PUT\",\n    \"important\": false\n  }",
+                "form": []
+            },
+            "tests": []
+        }
+    ]
+}
