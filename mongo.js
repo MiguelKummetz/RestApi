@@ -20,3 +20,7 @@ const connectDB = () => {
 }
 
 module.exports = connectDB
+
+// PORT=3001
+// MONGO_DB_URI=mongodb+srv://ami:1234@cluster0.kyprtz4.mongodb.net/notes-app?retryWrites=true&w=majority
+// MONGO_DB_URI_TEST=mongodb+srv://ami:1234@cluster0.kyprtz4.mongodb.net/test?retryWrites=true&w=majority

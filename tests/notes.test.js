@@ -7,14 +7,26 @@ const { api, initialNotes, getAllContentFromNotes } = require('./helpers')
 beforeEach(async () => {
   await Note.deleteMany({})
 
-  const note1 = new Note(initialNotes[0])
-  await note1.save()
+  // setting the notes manually:
+  // const note1 = new Note(initialNotes[0])
+  // await note1.save()
 
-  const note2 = new Note(initialNotes[1])
-  await note2.save()
+  // const note2 = new Note(initialNotes[1])
+  // await note2.save()
 
-  const note3 = new Note(initialNotes[2])
-  await note3.save()
+  // const note3 = new Note(initialNotes[2])
+  // await note3.save()
+
+  // setting the notes in parallel: can fail sometimes
+  // const notesObjects = initialNotes.map(note => new Note(note))
+  // const promises = notesObjects.map(note => note.save())
+  // await Promise.all(promises)
+
+  // setting the notes sequentially:
+  for (const note of initialNotes) {
+    const notesObject = new Note(note)
+    await notesObject.save()
+  }
 })
 
 describe('testing GET', () => {
@@ -106,23 +118,63 @@ describe('testing DELETE', () => {
     expect(response.body).toHaveLength(initialNotes.length)
   })
 })
+
 describe('testing PUT', () => {
+  test('a note can be updated with a diferent "content" value', async () => {
+    const testMessage = 'using PUT to change just the content'
+    const newNoteInfo = {
+      content: testMessage
+    }
+    const { ids } = await getAllContentFromNotes()
+    const noteLocation = 0
+    const noteToUpdate = ids[noteLocation]
+
+    await api
+      .put(`/api/notes/${noteToUpdate}`)
+      .send(newNoteInfo)
+      .expect(200)
+
+    const { response } = await getAllContentFromNotes()
+
+    expect(response.body[noteLocation].content).toBe(testMessage)
+  })
+
+  test('a note can be updated with a diferent "important" value', async () => {
+    const newNoteInfo = {
+      important: false
+    }
+    const { ids } = await getAllContentFromNotes()
+    const noteLocation = 0
+    const noteToUpdate = ids[noteLocation]
+
+    await api
+      .put(`/api/notes/${noteToUpdate}`)
+      .send(newNoteInfo)
+      .expect(200)
+
+    const { response } = await getAllContentFromNotes()
+
+    expect(response.body[noteLocation].important).toBe(false)
+  })
+
   test('a note can be updated', async () => {
     const newNoteInfo = {
       content: 'this note has been updated in a test',
       important: false
     }
     const { ids } = await getAllContentFromNotes()
+    const noteLocation = 0
+    const noteToUpdate = ids[noteLocation]
 
     await api
-      .put('/api/notes/' + ids[0])
+      .put(`/api/notes/${noteToUpdate}`)
       .send(newNoteInfo)
       .expect(200)
 
     const { response } = await getAllContentFromNotes()
 
-    expect(response.body[0].content).toBe('this note has been updated in a test')
-    expect(response.body[0].important).toBe(false)
+    expect(response.body[noteLocation].content).toBe('this note has been updated in a test')
+    expect(response.body[noteLocation].important).toBe(false)
   })
 })
 
