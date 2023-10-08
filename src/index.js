@@ -2,11 +2,16 @@ require('dotenv').config()
 const connectDB = require('./mongo')
 connectDB()
 const express = require('express')
+const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
 const app = express()
-const logger = require('./loggerMiddleware')
+const logger = require('./middleware/loggerMiddleware')
+const notFound = require('./middleware/notFound')
+const handleErrors = require('./middleware/handleErrors')
+const usersRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
 const Note = require('./models/Note')
-const notFound = require('./notFound')
-const handleErrors = require('./handleErrors')
+const User = require('./models/User')
 // const cors = require('cors')
 
 // app.use(cors())
@@ -24,10 +29,12 @@ app.get('/', (request, response) => {
   response.send('<h1>Hello World</h1>')
 })
 
-app.get('/api/notes', (request, response) => {
-  Note.find({}).then(notes => {
-    response.json(notes)
+app.get('/api/notes', async (request, response) => {
+  const notes = await Note.find({}).populate('user', {
+    username: 1,
+    name: 1
   })
+  response.json(notes)
 })
 
 app.get('/api/notes/:id', (request, response, next) => {
@@ -114,26 +121,58 @@ app.put('/api/notes/:id', async (request, response, next) => {
 
 // POST version with async/await:
 app.post('/api/notes', async (request, response, next) => {
-  const note = request.body
-  if (!note || !note.content) {
+  const {
+    content,
+    important = false
+  } = request.body
+
+  const authorization = request.get('authorization')
+  let token = ''
+  if (authorization && authorization.toLowerCase().startsWith('bearer')) {
+    token = authorization.substring(7)
+  }
+  let decodedToken = {}
+  try {
+    decodedToken = jwt.verify(token, process.env.SECRET)
+  } catch (e) {
+    next(e)
+  }
+
+  if (!token || !decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
+
+  const { id: userId } = decodedToken
+  const user = await User.findById(userId)
+
+  if (!content) {
     return response.status(400).json({
       error: 'required "content" field is missing'
     })
   }
 
   const newNote = new Note({
-    content: note.content,
-    important: typeof note.important !== 'undefined' ? note.important : false,
-    date: new Date()// .toISOString()
+    content,
+    date: new Date(), // .toISOString()
+    important,
+    user: user._id // user.toJSON().id
   })
 
   try {
     const savedNote = await newNote.save()
+
+    user.notes = user.notes.concat(savedNote._id)
+    await user.save()
+
     response.json(savedNote)
   } catch (e) {
     next(e)
   }
 })
+
+app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
+
 // middleware for errror handeling of non existing URLs
 app.use(notFound)
 
@@ -145,8 +184,8 @@ const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
 
-// process.on('uncaughtException', () => {
-//   mongoose.connection.close()
-// })
+process.on('uncaughtException', () => {
+  mongoose.connection.close()
+})
 
 module.exports = { app, server }
