@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const mongoose = require('mongoose')
-const User = require('../models/User')
-const { server } = require('../index')
+const User = require('../../models/User')
+const { server } = require('../../index')
 const { api } = require('./helpers')
 const bcrypt = require('bcrypt')
 

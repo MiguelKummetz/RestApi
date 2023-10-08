@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "Api Rest",
-    "dateExported": "2023-10-05T05:25:46.813Z",
+    "dateExported": "2023-10-08T20:08:44.457Z",
     "version": "1.1",
     "folders": [],
     "requests": [
@@ -42,12 +42,17 @@
             "method": "POST",
             "sortNum": 30000,
             "created": "2023-10-04T17:03:07.642Z",
-            "modified": "2023-10-04T17:22:04.085Z",
-            "headers": [],
+            "modified": "2023-10-08T16:52:43.701Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjI4ZGMyYzc3NDEyNTUyMDhkZmRiYiIsInVzZXJuYW1lIjoiQW1pIiwiaWF0IjoxNjk2NzgyODM0fQ.-BcaHo2u-QQ4bpQ9DhhcUQFTb0ZHkPphkq7183XLB7I"
+                }
+            ],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n    \"content\": \"super mi amor\",\n    \"important\": true\n  }",
+                "raw": "{   \n    \"content\": \"false token\",\n    \"important\": false,\n    \"userId\": \"65228dc2c7741255208dfdbb\"\n  }",
                 "form": []
             },
             "tests": []
@@ -57,16 +62,68 @@
             "colId": "13bd0c0b-8976-4d53-954f-91dda3809756",
             "containerId": "",
             "name": "api/notes/:id",
-            "url": "http://localhost:3001/api/notes/651d99b1ac54cc0d54f32cb7",
+            "url": "http://localhost:3001/api/notes/651d99b1ac54cc0d54f32cb",
             "method": "PUT",
             "sortNum": 40000,
             "created": "2023-10-04T17:04:18.538Z",
-            "modified": "2023-10-04T17:05:37.823Z",
+            "modified": "2023-10-08T16:53:16.152Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
                 "raw": "{\n    \"content\": \"this content is updated using PUT\",\n    \"important\": false\n  }",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "73eb7999-de7a-4f3f-87bc-300b5ee4d1e1",
+            "colId": "13bd0c0b-8976-4d53-954f-91dda3809756",
+            "containerId": "",
+            "name": "api/users",
+            "url": "http://localhost:3001/api/users/",
+            "method": "GET",
+            "sortNum": 60000,
+            "created": "2023-10-08T10:14:22.796Z",
+            "modified": "2023-10-08T10:14:27.115Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "1dda1a93-d0d9-48c1-915f-9dfbd9a5a0e4",
+            "colId": "13bd0c0b-8976-4d53-954f-91dda3809756",
+            "containerId": "",
+            "name": "api/users",
+            "url": "http://localhost:3001/api/users/",
+            "method": "POST",
+            "sortNum": 70000,
+            "created": "2023-10-07T12:14:52.528Z",
+            "modified": "2023-10-08T12:28:28.642Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"username\": \"Momo\",\n    \"name\": \"Miguel\",\n    \"password\": \"1234\"\n  } ",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "792f32b2-dd2f-46d0-9b87-0e9199aa2a14",
+            "colId": "13bd0c0b-8976-4d53-954f-91dda3809756",
+            "containerId": "",
+            "name": "api/login",
+            "url": "http://localhost:3001/api/login",
+            "method": "POST",
+            "sortNum": 70000,
+            "created": "2023-10-08T11:52:09.735Z",
+            "modified": "2023-10-08T12:28:58.471Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"username\": \"Ami\",\n    \"password\": \"1234\"\n  } ",
                 "form": []
             },
             "tests": []
